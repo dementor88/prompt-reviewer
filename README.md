@@ -108,6 +108,21 @@ prompt-reviewer link --claude
 
 </details>
 
+### 🔌 Plugin (Optional — OpenCode Only)
+
+The plugin injects trigger-priority rules into the system prompt, ensuring `prompt-review:` is detected **before** any mode directives (`[analyze-mode]`, `[debug-mode]`, etc.).
+
+```bash
+# From the installed skill directory:
+bash ~/.config/opencode/skills/prompt-reviewer/skills/prompt-reviewer/plugin/install.sh
+```
+
+This creates a symlink in `~/.config/opencode/plugin/` — restart OpenCode to activate. To remove:
+
+```bash
+rm ~/.config/opencode/plugin/prompt-reviewer.js
+```
+
 ---
 
 ## 🚀 Usage

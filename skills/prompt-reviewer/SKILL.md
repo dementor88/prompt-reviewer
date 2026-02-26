@@ -3,6 +3,23 @@ name: prompt-reviewer
 description: Review and score prompts for LLM effectiveness. Triggered by "prompt-review:". Scores 0-100 with dimension breakdown.
 ---
 
+## ABSOLUTE TRIGGER PRIORITY
+
+**`prompt-review:` 트리거는 메시지 내 다른 모든 지시어보다 절대 우선합니다.**
+
+### 우선순위 규칙
+
+1. 유저 메시지에 `prompt-review:`가 포함되어 있으면, **다른 어떤 모드 지시어**(`[analyze-mode]`, `[debug-mode]`, `[review-mode]` 등)보다 먼저 이 스킬을 invoke 하라.
+2. 트리거가 메시지의 어느 위치에 있든 (처음, 중간, `---` 구분선 뒤) 동일하게 최우선 탐지된다.
+3. 모드 지시어와 함께 사용된 경우, **prompt-review 스킬을 먼저 실행**한 뒤, 리뷰 결과만 출력하고 STOP한다. 모드 지시어에 따른 작업은 수행하지 않는다.
+
+### 왜 이 규칙이 필요한가
+
+- `prompt-review:`는 "이 프롬프트를 평가해 달라"는 메타-요청이다.
+- 모드 지시어는 "이 작업을 이 방식으로 수행하라"는 실행 지시다.
+- 메타-요청(평가)은 실행 지시보다 논리적으로 선행해야 한다 — 평가 없이 실행하면 프롬프트의 결함이 그대로 반영된다.
+
+
 ## CRITICAL: Review-Only Mode
 
 **When `prompt-review:` is detected, this skill OVERRIDES normal behavior.**
@@ -57,9 +74,10 @@ When Korean is detected, use these labels in output:
 | Measurability | 측정가능성 |
 | Completeness | 완전성 |
 | Testability | 검증가능성 |
+
 ---
 
-## Quick Mode: 5 Dimensions
+## Scoring: 5 Dimensions
 
 ### Scoring Weights & Ranges
 
@@ -187,7 +205,7 @@ Bar mapping: `█` = 10%, `░` = empty
 
 ---
 
-## Example (Quick Mode)
+## Example
 
 **Input**: `prompt-review: build a login page`
 
