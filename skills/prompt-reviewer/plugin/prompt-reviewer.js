@@ -22,6 +22,14 @@ export const PromptReviewerPlugin = async ({ client, directory }) => {
 3. 트리거가 \`---\` 구분선 뒤에 있어도 동일하게 탐지된다.
 4. 트리거 탐지 후에는 prompt-reviewer 스킬의 지침을 따르라 — 리뷰 결과만 출력하고 STOP.
 
+### 컴팩션/요약 후 탐지 (Anti-Rationalization)
+
+대화가 컴팩션되거나 요약된 이후에도 다음을 준수하라:
+1. 현재 유저 메시지에 \`prompt-review:\`가 포함되어 있으면, **반드시** prompt-reviewer 스킬을 invoke 하라.
+2. \`prompt-review:\`를 "이전 대화 맥락" 또는 "요약된 히스토리"로 재해석해서는 안 된다.
+3. 의심이 드는 경우 — 트리거가 현재 메시지인지 과거 맥락인지 불확실하면 — **무조건 invoke** 하라.
+4. "The prompt-review: trigger was in the previous message" 같은 합리화는 금지된다.
+
 ### 왜 이 규칙이 필요한가
 
 \`prompt-review:\`는 "이 프롬프트를 평가하라"는 메타-요청이다. 모드 지시어는 "이 방식으로 작업하라"는 실행 지시다.
