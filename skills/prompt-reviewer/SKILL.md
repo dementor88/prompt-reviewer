@@ -79,6 +79,19 @@ When Korean is detected, use these labels in output:
 
 ## Scoring: 5 Dimensions
 
+### Task-Scale Classification
+
+Classify the task BEFORE applying scoring weights. Scale affects interpretation of scores, not the weights themselves.
+
+| Scale | 한국어 | Criteria | Examples |
+|-------|--------|----------|----------|
+| **Simple** | 단순 | Single action, clear domain, <30min task | "Fix typo in README", "change button color to red" |
+| **Medium** | 보통 | 2-3 steps, some context needed, 1-4hr task | "Add email validation to signup form", "write unit tests for auth module" |
+| **Complex** | 복잡 | Multi-step, cross-domain, dependencies, >4hr task | "Design and implement OAuth2 login flow", "migrate database schema with zero downtime" |
+
+**Threshold note**: For Simple tasks, a score ≥50 may be sufficient. For Complex tasks, aim for ≥70 before execution.
+
+
 ### Scoring Weights & Ranges
 
 | Criterion | Weight | Measures |
@@ -99,6 +112,18 @@ When Korean is detected, use these labels in output:
 | **76-100%** | Excellent | Precise, complete, no ambiguity. |
 
 Example: Clarity (20% weight) at 75% = 15/20 points.
+
+### Scoring Anchors
+
+Use these examples to calibrate consistent scoring:
+
+| Dimension | Poor (0-25%) | Weak (26-50%) | Good (51-75%) | Excellent (76-100%) |
+|-----------|-------------|----------------|----------------|----------------------|
+| **Clarity** | "fix the thing" | "fix the login bug" | "fix the null pointer in login.ts when email is empty" | "In `src/auth/login.ts:45`, fix NPE: `user.email` can be undefined when OAuth returns partial profile—handle by returning 401 with message 'Email required'" |
+| **Specificity** | "write a report" | "write a sales report" | "write a Q3 sales report comparing regions, using data from `sales.csv`" | "Write a 2-page Q3 regional sales report in `reports/q3-sales.md` using `data/sales-q3.csv`, comparing North/South/East regions, highlighting top SKU per region, in Markdown table format" |
+| **Measurability** | "make it faster" | "improve page load speed" | "reduce homepage load to <2s on 4G" | "Reduce homepage LCP to <1.5s on simulated 4G (Chrome DevTools): measure before/after with `lighthouse --only-categories=performance`" |
+| **Completeness** | "write a blog post" | "write a product intro blog post" | "write a 500-word product intro blog post covering key features and target audience" | "Write a 500-word product intro for `Acme Widget` in `content/blog/intro.md`: cover 3 key features, target audience (SMB ops managers), CTA linking to `/demo`, SEO title tag included" |
+| **Testability** | "create a recipe" | "create a pasta recipe" | "create a pasta recipe with ingredient list and steps" | "Create a carbonara recipe: list 6 ingredients with exact quantities, 8 numbered steps, specify 'al dente = 8 min at rolling boil', success = 'sauce coats spoon without dripping'" |
 
 ### Quick Improvement Guide
 
@@ -140,6 +165,20 @@ When a dimension scores poorly, add these elements:
 | "제대로 만들어줘" | No definition |
 | "깔끔하게", "빠르게", "예쁘게" | Subjective |
 
+### Anti-Pattern Detection
+
+Structural prompt mistakes that systematically degrade output quality. Detect BEFORE scoring — these indicate deeper issues beyond low dimension scores.
+
+| Pattern | 한국어 | Signature | Example |
+|---------|--------|-----------|---------|
+| **Over-Delegation** | 과잉위임 | "You decide", "whatever works", "your choice" | "Build the best auth system you think is appropriate" |
+| **Implicit Context** | 암묵적 맥락 | Refers to files/systems not described | "Fix the same issue as last time in the user module" |
+| **Scope Creep** | 범위 확장 | Single prompt contains 3+ unrelated tasks | "Add auth, migrate the DB, write docs, and optimize queries" |
+| **Role Confusion** | 역할 혼동 | Treats AI as human team member with memory | "Remember what we discussed? Continue from where we left off" |
+| **Wishful Constraints** | 희망적 제약 | Contradictory or impossible requirements | "Make it perfect, do it in 5 minutes, no tradeoffs" |
+
+**When detected**: Flag in output under `### ⚠️ Anti-Patterns Detected` (only if ≥1 pattern found). Anti-patterns lower Clarity and Completeness scores by default.
+
 ---
 
 ## Output Format
@@ -161,15 +200,19 @@ Bar mapping: `█` = 10%, `░` = empty
 
 **Original:** > [prompt]
 
+**Scale: [Simple/Medium/Complex]**
+
 ### Score: X/100
 
 [5 dimension bars with percentages]
 
-### Gaps
+### ⚠️ Anti-Patterns Detected (if any)
 
-| Dimension | Issue | Impact |
-|-----------|-------|--------|
-| [dimension] | [specific problem] | [consequence] |
+| Pattern | Evidence | Impact |
+|---------|----------|--------|
+| [pattern name] | [quote from prompt] | [consequence] |
+
+_(Omit this section if no anti-patterns found)_
 
 ### Suggested Refinement
 
@@ -182,6 +225,13 @@ Bar mapping: `█` = 10%, `░` = empty
 - **[Dimension]**: [what was added/clarified]
 
 **Projected Score**: ~XX/100 (improvement from XX to XX)
+
+### Gaps
+
+| Dimension | Issue | Impact |
+|-----------|-------|--------|
+| [dimension] | [specific problem] | [consequence] |
+
 ```
 
 ---
@@ -216,6 +266,8 @@ Bar mapping: `█` = 10%, `░` = empty
 
 **Original:** > build a login page
 
+**Scale: Complex**
+
 ### Score: 35/100
 
 Clarity       ████░░░░░░  40%  (8/20)
@@ -223,14 +275,6 @@ Specificity   ██░░░░░░░░  20%  (5/25)
 Measurability ███░░░░░░░  30%  (6/20)
 Completeness  ████░░░░░░  40%  (8/20)
 Testability   ████░░░░░░  40%  (6/15)
-
-### Gaps
-
-| Dimension | Issue | Impact |
-|-----------|-------|--------|
-| **Specificity** (20%) | No tech stack, file locations | Agent must guess framework |
-| **Measurability** (30%) | No success criteria | Cannot verify completion |
-| **Completeness** (40%) | No error handling, security | Missing critical flows |
 
 ### Suggested Refinement
 
@@ -256,4 +300,12 @@ Testability   ████░░░░░░  40%  (6/15)
 - **Completeness**: Added error handling, validation, security (httpOnly cookie)
 
 **Projected Score**: ~82/100 (improvement: +47 points)
+
+### Gaps
+
+| Dimension | Issue | Impact |
+|-----------|-------|--------|
+| **Specificity** (20%) | No tech stack, file locations | Agent must guess framework |
+| **Measurability** (30%) | No success criteria | Cannot verify completion |
+| **Completeness** (40%) | No error handling, security | Missing critical flows |
 ```
