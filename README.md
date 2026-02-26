@@ -24,10 +24,13 @@ Get a score • See the gaps • Refine before you waste tokens
 
 | Feature | Description |
 |---------|-------------|
-| 🚀 **Quick Review** | Fast 5-dimension scoring in seconds |
-| 🌐 **Bilingual** | Auto-detects Korean/English |
-| 🎯 **Actionable** | Provides refined prompts with projected improvements |
+| 🚀 **Quick Review** | Fast 5-dimension scoring in seconds with traffic-light verdict |
+| 🌐 **Bilingual** | Auto-detects Korean/English, outputs in matching language |
+| 🎯 **Actionable** | Provides refined prompts with projected improvements and specific gaps |
 | 🛡️ **Review-Only** | Analyzes without executing—safe by design |
+| ⚠️ **Anti-Pattern Detection** | Detects structural issues (over-delegation, implicit context, scope creep, role confusion) |
+| 📊 **Scoring Anchors** | Calibrated examples for each dimension to ensure consistency |
+| 📈 **Task-Scale Classifier** | Adjusts interpretation for Simple/Medium/Complex tasks |
 
 ---
 
@@ -110,7 +113,7 @@ prompt-reviewer link --claude
 
 ### 🔌 Plugin (Optional — OpenCode Only)
 
-The plugin injects trigger-priority rules into the system prompt, ensuring `prompt-review:` is detected **before** any mode directives (`[analyze-mode]`, `[debug-mode]`, etc.).
+The plugin injects trigger-priority rules into the system prompt, ensuring `prompt-review:` is detected **before** any mode directives (`[analyze-mode]`, `[debug-mode]`, etc.). It includes anti-rationalization hardening to protect against prompt compaction confusion.
 
 ```bash
 # From the installed skill directory:
@@ -178,55 +181,50 @@ prompt-review: build a login page with OAuth
 
 ## 💡 Example
 
-<table>
-<tr>
-<td width="50%">
+**Input**: `prompt-review: build a login page`
 
-**Input**
+**Output**:
 ```
-prompt-review: build a login page
-```
+## Prompt Review
 
-</td>
-<td width="50%">
+**Original:** > build a login page
 
-**Score: 35/100** ⚠️
+**Scale: Complex**
 
-</td>
-</tr>
-</table>
+🚨 다시 써볼까요 (35/100)
+명확성 40 | 구체성 20⚠️ | 측정가능성 30⚠️ | 완전성 40⚠️ | 검증가능성 40⚠️
 
-```
-Clarity       ████░░░░░░  40%  (8/20)
-Specificity   ██░░░░░░░░  20%  (5/25)
-Measurability ███░░░░░░░  30%  (6/20)
-Completeness  ████░░░░░░  40%  (8/20)
-Testability   ████░░░░░░  40%  (6/15)
-```
+### Suggested Refinement
 
-### 🔴 Gaps Identified
+**Improved Prompt:**
 
-| Dimension | Issue | Impact |
-|-----------|-------|--------|
-| **Specificity** | No tech stack or file locations | Agent must guess framework |
-| **Measurability** | No success criteria | Cannot verify completion |
-| **Completeness** | No error handling or security | Missing critical flows |
-
-### ✅ Suggested Refinement → **Projected: 82/100** (+47 pts)
-
-> Build a login page using **React 18** with **TypeScript** in `src/components/auth/LoginPage.tsx`.
+> Build a login page using React 18 with TypeScript in `src/components/auth/LoginPage.tsx`.
 >
 > **Requirements:**
 > - Email/password form with validation (email format, password min 8 chars)
 > - Submit button disabled until valid input
 > - Show loading spinner during API call
-> - Display error messages for 401 (invalid credentials) and 500 (server errors)
+> - Display error messages for invalid credentials (401) and server errors (500)
 > - On success, redirect to `/dashboard` and store JWT in httpOnly cookie
 >
 > **Success Criteria:**
 > - `npm test src/components/auth/LoginPage.test.tsx` passes
-> - Invalid login shows "Invalid credentials" error
-> - Valid login redirects to dashboard within 2 seconds
+> - Manual test: invalid login shows "Invalid credentials" error
+> - Manual test: valid login redirects to dashboard within 2 seconds
+
+**Changes Made:**
+- **Specificity**: Added React 18, TypeScript, file path
+- **Measurability**: Added success criteria with test command
+- **Completeness**: Added error handling, validation, security (httpOnly cookie)
+
+**Projected Score**: ~82/100 (improvement: +47 points)
+
+### 개선 포인트
+
+구체성: 기술 스택이나 파일 경로가 없어요. 에이전트가 프레임워크를 추측해야 해요.
+측정가능성: 성공 기준이 없어요. 완료 여부를 검증할 수 없어요.
+완전성: 에러 처리와 보안이 빠졌어요. 로그인 실패 시 동작이 정의되지 않았어요.
+```
 
 ---
 
