@@ -203,10 +203,10 @@ Format: `명확성 80 | 구체성 60 | 측정가능성 70 | 완전성 40⚠️ |
 One per line. Format: `[패턴명]: "[인용]" ← [영향]`
 English: `[Pattern]: "[quote]" ← [impact]`
 
-### 개선 포인트 Output (inline)
+### 🔧 개선 포인트 Output (inline)
 
-One per line. Format: `[차원명]: [설명]`
-English: `[Dimension]: [explanation]`
+One per line. Format: `[차원명]: [문제] → [해결]`
+English: `[Dimension]: [problem] → [fix]`
 
 ### Output Template
 
@@ -232,15 +232,9 @@ _(Omit this section if no anti-patterns found)_
 
 > [Original prompt with all gaps addressed]
 
-**Changes Made:**
-- **[Dimension]**: [what was added/clarified]
-- **[Dimension]**: [what was added/clarified]
+### 🔧 개선 포인트
 
-**Projected Score**: ~XX/100 (improvement from XX to XX)
-
-### 개선 포인트
-
-[dimension]: [specific problem and suggestion]
+[dimension]: [specific problem] → [what was fixed in refinement]
 ```
 
 ---
@@ -298,16 +292,9 @@ _(Omit this section if no anti-patterns found)_
 > - Manual test: invalid login shows "Invalid credentials" error
 > - Manual test: valid login redirects to dashboard within 2 seconds
 
-**Changes Made:**
-- **Specificity**: Added React 18, TypeScript, file path
-- **Measurability**: Added success criteria with test command
-- **Completeness**: Added error handling, validation, security (httpOnly cookie)
+### 🔧 개선 포인트
 
-**Projected Score**: ~82/100 (improvement: +47 points)
-
-### 개선 포인트
-
-구체성: 기술 스택이나 파일 경로가 없어요. 에이전트가 프레임워크를 추측해야 해요.
-측정가능성: 성공 기준이 없어요. 완료 여부를 검증할 수 없어요.
-완전성: 에러 처리와 보안이 빠졌어요. 로그인 실패 시 동작이 정의되지 않았어요.
+구체성: 기술 스택이나 파일 경로가 없어요 → React 18, TypeScript, 파일 경로 추가
+측정가능성: 성공 기준이 없어요 → 테스트 커맨드와 검증 기준 추가
+완전성: 에러 처리와 보안이 빠졌어요 → 에러 핸들링, 검증, httpOnly 쿠키 추가
 ```
