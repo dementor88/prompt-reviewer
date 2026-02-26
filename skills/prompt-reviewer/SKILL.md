@@ -183,15 +183,30 @@ Structural prompt mistakes that systematically degrade output quality. Detect BE
 
 ## Output Format
 
-Score visualization (10-char bars):
+### Verdict Line
 
-```
-┌─────────────────────────────────────────┐
-│ Dimension     ████████░░  80%           │
-└─────────────────────────────────────────┘
-```
+| Score Range | Emoji | Korean Label | English Label |
+|-------------|-------|-------------|---------------|
+| ≥80 | 🟢 | 좋아요 | Solid |
+| 50-79 | ⚠️ | 다듬어볼까요 | Needs work |
+| <50 | 🚨 | 다시 써볼까요 | Rewrite |
 
-Bar mapping: `█` = 10%, `░` = empty
+Format: `[emoji] [label] ([score]/100)`
+
+### Dimension Scores (inline)
+
+Single line, pipe-separated. Add ⚠️ after dimensions scoring <50%.
+Format: `명확성 80 | 구체성 60 | 측정가능성 70 | 완전성 40⚠️ | 검증가능성 90`
+
+### Anti-Pattern Output (inline, only when detected)
+
+One per line. Format: `[패턴명]: "[인용]" ← [영향]`
+English: `[Pattern]: "[quote]" ← [impact]`
+
+### 개선 포인트 Output (inline)
+
+One per line. Format: `[차원명]: [설명]`
+English: `[Dimension]: [explanation]`
 
 ### Output Template
 
@@ -202,15 +217,12 @@ Bar mapping: `█` = 10%, `░` = empty
 
 **Scale: [Simple/Medium/Complex]**
 
-### Score: X/100
+[emoji] [label] ([score]/100)
+[dim1] [score] | [dim2] [score] | [dim3] [score] | [dim4] [score] | [dim5] [score]
 
-[5 dimension bars with percentages]
+### ⚠️ 안티패턴 (if any)
 
-### ⚠️ Anti-Patterns Detected (if any)
-
-| Pattern | Evidence | Impact |
-|---------|----------|--------|
-| [pattern name] | [quote from prompt] | [consequence] |
+[pattern]: "[evidence]" ← [impact]
 
 _(Omit this section if no anti-patterns found)_
 
@@ -226,12 +238,9 @@ _(Omit this section if no anti-patterns found)_
 
 **Projected Score**: ~XX/100 (improvement from XX to XX)
 
-### Gaps
+### 개선 포인트
 
-| Dimension | Issue | Impact |
-|-----------|-------|--------|
-| [dimension] | [specific problem] | [consequence] |
-
+[dimension]: [specific problem and suggestion]
 ```
 
 ---
@@ -250,7 +259,7 @@ _(Omit this section if no anti-patterns found)_
 
 ### Output Rules
 7. **Show original prompt** - Always quote the exact input.
-8. **Show score first** - Score before details (users want the number).
+8. **Show verdict first** - Verdict+score before details (users want instant assessment).
 9. **Limit gaps to top 3-5** - Don't overwhelm; focus on highest impact.
 
 ---
@@ -268,13 +277,8 @@ _(Omit this section if no anti-patterns found)_
 
 **Scale: Complex**
 
-### Score: 35/100
-
-Clarity       ████░░░░░░  40%  (8/20)
-Specificity   ██░░░░░░░░  20%  (5/25)
-Measurability ███░░░░░░░  30%  (6/20)
-Completeness  ████░░░░░░  40%  (8/20)
-Testability   ████░░░░░░  40%  (6/15)
+🚨 다시 써볼까요 (35/100)
+명확성 40 | 구체성 20⚠️ | 측정가능성 30⚠️ | 완전성 40⚠️ | 검증가능성 40⚠️
 
 ### Suggested Refinement
 
@@ -301,11 +305,9 @@ Testability   ████░░░░░░  40%  (6/15)
 
 **Projected Score**: ~82/100 (improvement: +47 points)
 
-### Gaps
+### 개선 포인트
 
-| Dimension | Issue | Impact |
-|-----------|-------|--------|
-| **Specificity** (20%) | No tech stack, file locations | Agent must guess framework |
-| **Measurability** (30%) | No success criteria | Cannot verify completion |
-| **Completeness** (40%) | No error handling, security | Missing critical flows |
+구체성: 기술 스택이나 파일 경로가 없어요. 에이전트가 프레임워크를 추측해야 해요.
+측정가능성: 성공 기준이 없어요. 완료 여부를 검증할 수 없어요.
+완전성: 에러 처리와 보안이 빠졌어요. 로그인 실패 시 동작이 정의되지 않았어요.
 ```
