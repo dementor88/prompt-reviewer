@@ -24,8 +24,7 @@ Get a score • See the gaps • Refine before you waste tokens
 
 | Feature | Description |
 |---------|-------------|
-| 🚀 **Quick Mode** | Fast 5-dimension scoring in seconds |
-| 🔬 **Robust Mode** | Full 3-tier framework (CO-STAR + LUPES + 2026 Checklist) |
+| 🚀 **Quick Review** | Fast 5-dimension scoring in seconds |
 | 🌐 **Bilingual** | Auto-detects Korean/English |
 | 🎯 **Actionable** | Provides refined prompts with projected improvements |
 | 🛡️ **Review-Only** | Analyzes without executing—safe by design |
@@ -113,16 +112,10 @@ prompt-reviewer link --claude
 
 ## 🚀 Usage
 
-### Quick Mode — Fast 5-Dimension Review
+### Prompt Review — Fast 5-Dimension Review
 
 ```
 prompt-review: build a login page with OAuth
-```
-
-### Robust Mode — Full Framework Analysis
-
-```
-robust-prompt-review: implement a real-time notification system for our e-commerce platform
 ```
 
 ---
@@ -246,50 +239,6 @@ Testability   ████░░░░░░  40%  (6/15)
 | *"잘 만들어줘"* | 요구사항 없음 |
 | *"알아서 해줘"* | 제약조건 없음 |
 | *"깔끔하게"*, *"빠르게"* | 주관적 표현 |
-
-</details>
-
----
-
-## 🔬 Robust Mode Frameworks
-
-<details open>
-<summary><b>Tier 1: CO-STAR (40%)</b> — GovTech Singapore Framework</summary>
-
-| Letter | Component | Description |
-|--------|-----------|-------------|
-| **C** | Context | Background, system state |
-| **O** | Objective | Clear goal, specific task |
-| **S** | Style | Output format, code style |
-| **T** | Tone | Formality, technical depth |
-| **A** | Audience | Who is this for? |
-| **R** | Response | Expected output format |
-
-</details>
-
-<details>
-<summary><b>Tier 2: LUPES (35%)</b> — Meta-Validation Checks</summary>
-
-| Check | Description |
-|-------|-------------|
-| **Quality** | Well-formed, clear structure |
-| **Structure** | Logical flow, no contradictions |
-| **Validity** | Achievable within constraints |
-| **Risk** | Error handling, edge cases mentioned |
-
-</details>
-
-<details>
-<summary><b>Tier 3: 2026 Checklist (25%)</b> — Engineering Completeness</summary>
-
-- [ ] Success Criteria
-- [ ] Output Contract
-- [ ] Constraints
-- [ ] Inputs
-- [ ] Examples
-- [ ] Verification
-- [ ] Iteration Plan
-- [ ] Context
 
 </details>
 

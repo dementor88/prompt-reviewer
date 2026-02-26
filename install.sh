@@ -82,7 +82,6 @@ install() {
         echo ""
         echo "  Usage:"
         echo "    prompt-review: <your prompt here>"
-        echo "    robust-prompt-review: <your prompt here>"
         echo ""
     else
         error "Installation verification failed. SKILL.md not found."
